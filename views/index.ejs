@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4x4 Table</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px;
+        }
+        td {
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            margin: 5px;
+        }
+        .item {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 5px;
+            border-radius: 4px;
+            margin: 2px 0;
+            list-style-type: none;
+            min-width: 80px;
+            text-align: center;
+        }
+        .label {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        h1 {
+            text-align: center;
+            color: #343a40;
+            width: 100%;
+        }
+        .text-reciever {
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <form method="POST" action="/submit" id="userForm">
+        <label>
+            <input type="text" class="userInput" name="userInput" id="userInput" required>
+        </label>
+        <button type="submit">Submit</button>
+    </form>
+    <table id="namesTable">
+        <% let itemCounter = 1; %>
+        <% for (let i = 0; i < 4; i++) { %>
+            <tr>
+                <% for (let j = 0; j < 4; j++) { %>
+                    <td>
+                        <ul>
+                            <% for (let k = 0; k < 4; k++) { %>
+                                <li class="item item-<%= itemCounter %>" data-index="<%= itemCounter - 1 %>">
+                                    <span class="label"><%= itemCounter %> </span>
+                                </li>
+                                <% itemCounter++; %>
+                            <% } %>
+                        </ul>
+                    </td>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+    <audio id="correctSound" src="../correct.ogg"></audio>
+</div>
+<script>
+    document.getElementById('userForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const userInput = document.getElementById('userInput').value.trim();
+
+        fetch('/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userInput })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const names = data.names;
+                const correctSound = document.getElementById('correctSound');
+
+                names.forEach(item => {
+                    const element = document.querySelector(`.item-${item.index + 1}`);
+                    if (element) {
+                        element.querySelector('.label').textContent = `${item.index + 1} - ${item.name}`;
+                        element.style.backgroundColor = 'green';
+                        correctSound.play();  // Play sound when correct answer is given
+                    }
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    });
+</script>
+</body>
+</html>
