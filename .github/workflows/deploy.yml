@@ -1,0 +1,31 @@
+name: Deploy Node.js App
+
+on:
+  push:
+    branches:
+      - main  # or master if your main branch is named master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # specify the Node.js version you need
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the application
+        run: npm run build  # make sure you have a build script in package.json
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public  # adjust if your build output is in a different directory
