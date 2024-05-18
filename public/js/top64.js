@@ -43,7 +43,7 @@ document.querySelectorAll('.userForm').forEach(form => {
         event.preventDefault();
 
         // Get the trimmed value from the input element with the class 'userInput' within the current form
-        const userInput = this.querySelector('.userInput').value.trim();
+        const userInput = this.querySelector('.userInput').value.trim().toLowerCase();
         const player = this.getAttribute('data-player'); // Get the player identifier
 
         // Send a POST request to the '/submit' endpoint with the user input and player identifier
@@ -73,22 +73,21 @@ document.querySelectorAll('.userForm').forEach(form => {
                 // Update the current player on the page
                 switchTurn();
 
-                // Check if any matches were found
+                // Check if a match was found
                 if (names.length > 0) {
-                    // Iterate over each name in the 'names' array
-                    names.forEach(item => {
-                        // Select the element with the class 'item-[index + 1]'
-                        const element = document.querySelector(`.item-${item.index + 1}`);
-                        // If the element exists
-                        if (element) {
-                            // Update the text content of the '.label' element within the selected element
-                            element.querySelector('.label').textContent = `${item.index + 1} - ${item.name}`;
-                            // Change the background color of the selected element
-                            element.style.backgroundColor = '#00ADB5';
-                            // Play the correct sound when the correct answer is given
-                            correctSound.play();
-                        }
-                    });
+                    const item = names[0]; // Only consider the first match
+
+                    // Select the element with the class 'item-[index + 1]'
+                    const element = document.querySelector(`.item-${item.index + 1}`);
+                    // If the element exists
+                    if (element) {
+                        // Update the text content of the '.label' element within the selected element
+                        element.querySelector('.label').textContent = `${item.index + 1} - ${item.name}`;
+                        // Change the background color of the selected element
+                        element.style.backgroundColor = '#00ADB5';
+                        // Play the correct sound when the correct answer is given
+                        correctSound.play();
+                    }
                 } else {
                     // Play the wrong sound when no correct answers are given
                     wrongSound.play();

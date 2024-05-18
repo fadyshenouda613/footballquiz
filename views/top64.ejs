@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footy Challenge</title>
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+<div class="player1">
+    <h1>Player 1</h1>
+    <div class="score">Score: <span id="player1Score"><%= scores.player1 %></span></div>
+    <form method="POST" action="/submit" class="userForm player1Form" data-player="player1" id="player1Form">
+        <label>
+            <input type="text" class="userInput" name="userInput" required id="player1Input">
+        </label>
+    </form>
+</div>
+<div class="container">
+    <table id="namesTable">
+        <% let itemCounter = 1; %>
+        <% for (let i = 0; i < 4; i++) { %>
+            <tr>
+                <% for (let j = 0; j < 4; j++) { %>
+                    <td>
+                        <ul>
+                            <% for (let k = 0; k < 4; k++) { %>
+                                <li class="item item-<%= itemCounter %>" data-index="<%= itemCounter - 1 %>">
+                                    <span class="label"><%= itemCounter %></span>
+                                </li>
+                                <% itemCounter++; %>
+                            <% } %>
+                        </ul>
+                    </td>
+                <% } %>
+            </tr>
+        <% } %>
+    </table>
+    <audio id="correctSound" src="sounds/correct.ogg"></audio>
+    <audio id="wrongSound" src="sounds/wrong.ogg"></audio>
+
+</div>
+<div class="player2">
+    <h1>Player 2</h1>
+    <div class="score">Score: <span id="player2Score"><%= scores.player2 %></span></div>
+    <form method="POST" action="/submit" class="userForm player2Form" data-player="player2" id="player2Form">
+        <label>
+            <input type="text" class="userInput" name="userInput" required id="player2Input">
+        </label>
+    </form>
+</div>
+<div class="turn-indicator">
+    <h2>Current Player: <span id="currentPlayer"><%= currentPlayer %></span></h2>
+    <div>Time Remaining: <span id="timer">60</span>s</div>
+</div>
+
+<script src="js/top64.js"></script>
+</body>
+</html>
